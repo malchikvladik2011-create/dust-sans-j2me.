@@ -1,0 +1,26 @@
+YAML
+name: Build J2ME JAR
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+      - name: Build JAR
+        run: |
+          mkdir -p build/classes
+          javac -source 1.3 -target 1.3 -d build/classes src/*.java
+          cd build/classes
+          jar cvfm ../DustSans.jar ../../META-INF/MANIFEST.MF *
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: DustSans-JAR
+          path: build/DustSans.jar
